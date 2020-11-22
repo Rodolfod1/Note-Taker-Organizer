@@ -2,9 +2,12 @@
 const express=require("express");
 const fs=require("fs");
 const util=require("util");
+//uuid from npmjs.com documentation for ver4
+const { v4: uuidv4 } = require("uuid");
 var path=require("path");
 var db=require("./db/db");
 const { promises } = require("dns");
+const { json } = require("express");
 
 //Setting up Express 
 //==========================
@@ -33,10 +36,30 @@ const writeFileAsync=util.promisify(fs.writeFile);
 
  //====   API Routes===
  app.get("/api/notes", function(req, res){
-     return res.json(db);
+     fs.readFile(__dirname + "/db/db.json","UTF8", function(err,dat){
+         if(err) throw err;
+         var Notes= JSON.parse(dat);
+         res.json(Notes);
+     })
  });
+
  // post to receive a new note from body and add it to the json file
- app.post("/api/notes", function(req, res){
+ app.post("/api/notes", async (req,res) => {
+    var Notes= await readFileAsync("./db/db.json", "UTF8");
+    Notes=JSON.parse(Notes);
+    req.body.id= uuidv4();
+    Notes.push(req.body);
+
+    fs.writeFile(__dirname + "./db/db.json", JSON.stringify(Notes));
+    res.json(Notes[Notes.length-1]);
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ function(req, res){
      db.push(req.body);
      res.json(true);
  }) 
