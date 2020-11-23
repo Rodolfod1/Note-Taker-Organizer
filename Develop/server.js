@@ -21,8 +21,6 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 
-// const readFile=util.promisify(fs.readFile);
-// const writeFile=util.promisify(fs.writeFile);
 
 
  //routes
@@ -55,25 +53,20 @@ app.post("/api/notes", function(req, res){
          //if there is no error then send response 
          res.json(db);
      });
-  })
+  });
 
  // DELETE Note Method  
- // from index.js we need---> url: "api/notes/" + id, = "api/notes/id"
- app.delete("api/notes/id",function(req,res){
-     console.log("Call requested");
+ // from index.js we need---> url: "api/notes/" + id, = "/api/notes/:id"
+ app.delete("/api/notes/:id", function(req,res){
     // Getting the ID from request  
-    var Id = req.params.id;
-    console.log(Id);
+    var NId = req.params.id;
     // uding ID on loop at the dbJSON file 
     for(i=0; i<db.length; i++){
-        console.log(db[i].id);
         // selecting the id and splicing the element
-        if(Id=== db[i].id){
+        if(NId=== db[i].id){
             db.splice(i,1);
           };
         }
-    console.log("the new db");
-    console.log(db);
     //writing the new db from the mem to the file     
     fs.writeFile("./db/db.json",JSON.stringify(db),function(err){
             if (err) throw err;
@@ -82,9 +75,6 @@ app.post("/api/notes", function(req, res){
      });
  })
  
- 
-
-
  //===========
  //   Port listener standard
  app.listen(PORT,function(){
