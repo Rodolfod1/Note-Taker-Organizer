@@ -57,17 +57,23 @@ app.post("/api/notes", function(req, res){
      });
   })
 
- // DELETE Note Method
- app.delete("/api/notes",function(req,res){
+ // DELETE Note Method  
+ // from index.js we need---> url: "api/notes/" + id, = "api/notes/id"
+ app.delete("api/notes/id",function(req,res){
+     console.log("Call requested");
     // Getting the ID from request  
     var Id = req.params.id;
+    console.log(Id);
     // uding ID on loop at the dbJSON file 
     for(i=0; i<db.length; i++){
+        console.log(db[i].id);
         // selecting the id and splicing the element
         if(Id=== db[i].id){
             db.splice(i,1);
           };
         }
+    console.log("the new db");
+    console.log(db);
     //writing the new db from the mem to the file     
     fs.writeFile("./db/db.json",JSON.stringify(db),function(err){
             if (err) throw err;
