@@ -4,21 +4,14 @@ const fs=require("fs");
 const { v4: uuidv4 } = require("uuid");
 var path=require("path");
 var db=require("./db/db");
-
 //Setting up Express
-//==========================
 var app= express();
-var PORT= 3000;
-//===============
+// adding a dynamic port config per Heroku documentation
+var PORT= process.env.PORT || 3000;
 //setting up Express for data parsing
-//==========================================
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
-
-//====================================================
-//            ROUTES
-//===================================================
  //===     HTML ROUTES ==============================
  app.get("/notes",function(req,res){
      res.sendFile(path.join(__dirname,"public","notes.html"));
@@ -68,9 +61,7 @@ app.post("/api/notes", function(req, res){
             res.json(db);
      });
  })
-  //=========== END of ROUTES===============================
-
- //   Port listener standard
+ //  ==== Port listener  =====
  app.listen(PORT,function(){
     console.log("App listening on PORT: " + PORT);
  })
