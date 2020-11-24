@@ -12,18 +12,19 @@ var PORT= process.env.PORT || 3000;
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
- //===     HTML ROUTES ==============================
+ //===     HTML and API ROUTES ==============================
+  //  GET Method 
  app.get("/notes",function(req,res){
      res.sendFile(path.join(__dirname,"public","notes.html"));
  });
- app.get("/",function(req,res){
-     res.sendFile(path.join(__dirname,"public","index.html"));
- });
- //====   API Routes  =================================
- //  GET Method 
+ 
  app.get("/api/notes", function(req, res){
          res.json(db);
       });
+// for the "*" to work this instruction must be at the last of the get list methods
+app.get("*",function(req,res){
+        res.sendFile(path.join(__dirname,"public","index.html"));
+    });      
 
  // POST Method 
  //route to receive a new note from body and add it to the json file
